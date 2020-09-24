@@ -33,17 +33,17 @@ public class SelectingSystem : ComponentSystem
                 EntityManager.RemoveComponent<Selecting>(selectedUnit);
 
                 //Get our prefab from our spawner and set Translation (to produce a LocalToWorld)
-                var entity = EntityManager.Instantiate(prefab);
-                EntityManager.AddComponent(entity, typeof(Highlight));
+                var highligthEntity = EntityManager.Instantiate(prefab);
+                EntityManager.AddComponent(highligthEntity, typeof(Highlight));
 
                 //For a child to sucessfully have a parent it needs:
                 // 1. LocalToWorld (either a translation or rotation)
                 // 2. LocalToParent
                 // 3. Parent
-                EntityManager.SetComponentData(entity, new Translation { Value = new float3(0, -0.5f, 0) });
+                EntityManager.SetComponentData(highligthEntity, new Translation { Value = new float3(0, -0.5f, 0) });
                 var localParent = EntityManager.GetComponentData<LocalToWorld>(selectedUnit).Value;
-                EntityManager.AddComponentData(entity, new LocalToParent { Value = localParent });
-                EntityManager.AddComponentData(entity, new Parent { Value = selectedUnit });
+                EntityManager.AddComponentData(highligthEntity, new LocalToParent { Value = localParent });
+                EntityManager.AddComponentData(highligthEntity, new Parent { Value = selectedUnit });
             }
         }
     }

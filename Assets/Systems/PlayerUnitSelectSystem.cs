@@ -31,21 +31,17 @@ public class PlayerUnitSelectSystem : JobComponentSystem
         {
             if (input.LeftClick)
             {
-                //If selected component exists on our unit, unselect before we recalc selected
-                if(Selected.Exists(entity))
-                {
-                    CommandBuffer.RemoveComponent<PlayerUnitSelect>(index, entity);
-                    CommandBuffer.AddComponent(index, entity, new Deselecting());
-                }
-
-                //Add select component to unit
                 if(RTSPhysics.Intersect(aabb, ray))
                 {
-                    CommandBuffer.AddComponent(index, entity, new PlayerUnitSelect());
-                    CommandBuffer.AddComponent(index, entity, new Selecting());
-                } else
-                {
-
+                    //If selected component exists on our unit, unselect before we recalc selected
+                    if (Selected.Exists(entity))
+                    {
+                        CommandBuffer.RemoveComponent<PlayerUnitSelect>(index, entity);
+                        CommandBuffer.AddComponent(index, entity, new Deselecting());
+                    } else {
+                        CommandBuffer.AddComponent(index, entity, new PlayerUnitSelect());
+                        CommandBuffer.AddComponent(index, entity, new Selecting());
+                    }
                 }
             }
 
