@@ -25,7 +25,7 @@ public class AABBCollisionSystem : JobComponentSystem
 
     EntityQuery m_AABBGroup;
 
-    protected override void OnCreateManager()
+    protected override void OnCreate()
     {
         var query = new EntityQueryDesc
         {

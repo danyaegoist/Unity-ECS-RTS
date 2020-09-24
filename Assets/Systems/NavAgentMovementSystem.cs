@@ -28,7 +28,7 @@ public class NavAgentMovementSystem : JobComponentSystem
     {
         var job = new NavAgentMovementJob
         {
-            dT = Time.deltaTime,
+            dT = Time.DeltaTime,
         };
         return job.Schedule(this, inputDeps);
     }

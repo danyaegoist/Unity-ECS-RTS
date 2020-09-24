@@ -21,7 +21,7 @@ public class PlayerUnitSelectSystem : JobComponentSystem
     struct PlayerUnitSelectJob : IJobForEachWithEntity<PlayerInput, AABB>
     {
 
-        [ReadOnly] public EntityCommandBuffer CommandBuffer;
+        [WriteOnly] public EntityCommandBuffer.Concurrent CommandBuffer;
 
         [ReadOnly] public ComponentDataFromEntity<PlayerUnitSelect> Selected;
         public Ray ray;
@@ -34,15 +34,15 @@ public class PlayerUnitSelectSystem : JobComponentSystem
                 //If selected component exists on our unit, unselect before we recalc selected
                 if(Selected.Exists(entity))
                 {
-                    CommandBuffer.RemoveComponent<PlayerUnitSelect>(entity);
-                    CommandBuffer.AddComponent(entity, new Deselecting());
+                    CommandBuffer.RemoveComponent<PlayerUnitSelect>(index, entity);
+                    CommandBuffer.AddComponent(index, entity, new Deselecting());
                 }
 
                 //Add select component to unit
                 if(RTSPhysics.Intersect(aabb, ray))
                 {
-                    CommandBuffer.AddComponent(entity, new PlayerUnitSelect());
-                    CommandBuffer.AddComponent(entity, new Selecting());
+                    CommandBuffer.AddComponent(index, entity, new PlayerUnitSelect());
+                    CommandBuffer.AddComponent(index, entity, new Selecting());
                 } else
                 {
 
@@ -55,7 +55,7 @@ public class PlayerUnitSelectSystem : JobComponentSystem
     protected override JobHandle OnUpdate(JobHandle inputDeps)
     {
         var job = new PlayerUnitSelectJob {
-             CommandBuffer = m_EntityCommandBufferSystem.CreateCommandBuffer(),
+             CommandBuffer = m_EntityCommandBufferSystem.CreateCommandBuffer().ToConcurrent(),
              Selected = GetComponentDataFromEntity<PlayerUnitSelect>(),
              ray = Camera.main.ScreenPointToRay(Input.mousePosition),
         }.Schedule(this, inputDeps);
