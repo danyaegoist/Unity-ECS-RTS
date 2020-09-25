@@ -42,7 +42,11 @@ public class PlayerUnitSelectSystem : JobComponentSystem
                         CommandBuffer.AddComponent(index, entity, new PlayerUnitSelect());
                         CommandBuffer.AddComponent(index, entity, new Selecting());
                     }
+
+
                 }
+
+                //If we do not intersect anyone, must deselect all
             }
 
         }
